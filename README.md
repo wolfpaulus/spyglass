@@ -93,11 +93,3 @@ This is a one-shot job, so it does not need `KeepAlive`. Adjust `StartInterval`
 if an hourly check is not appropriate.
 
 And don't worry, launchd will never launch a second overlapping instance of the LaunchAgent when StartInterval triggers while the previous run is still active.
-
-## Coverage
-
-The badge is generated from `coverage.xml`. After running the tests, refresh it with:
-
-```shell
-genbadge coverage -i coverage.xml -o coverage.svg -l
-```
