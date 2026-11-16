@@ -8,7 +8,7 @@
 [![Python runtime dependencies: none](https://img.shields.io/badge/Python%20runtime%20dependencies-none-success.svg)](#requirements)
 [![Coverage](coverage.svg)](#coverage)
 
-Spyglass is a **one-shot** command-line tool that keeps selected Apple Containers running and updates them to the latest version of their image. It is not a daemon; schedule it with a macOS LaunchAgent if you want it to run periodically or at login.
+Spyglass is a **one-shot** command-line tool that keeps selected Apple Containers running and updates them to the latest version of their image. It is not a daemon; schedule it with a macOS LaunchAgent (see below) if you want it to run periodically or at login.
 
 ## Requirements
 
