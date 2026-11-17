@@ -66,7 +66,7 @@ def cmd_inspect(container_id: str) -> dict[Any, Any]:
 def cmd_start(container_id: str) -> None:
     """ Start a container by its ID """
     result = container_command("start", container_id)
-    logger.info(f"Start command result for container {container_id}: {result}")
+    logger.info(f"Starting container {container_id}: {result}")
 
 
 def cmd_img_digest(image: str) -> str | None:
@@ -263,7 +263,7 @@ def recreate(c: dict[Any, Any], image_reference: str | None = None) -> list[str]
     # Image and original process arguments
     cmd.append(image_reference or c["configuration"]["image"]["reference"])
     cmd.extend(c["configuration"]["initProcess"]["arguments"])
-    logger.info(f"Recreate command for container {name}: {' '.join(cmd)}")
+    logger.info(f"Recreating command for container {name}: {' '.join(cmd)}")
     return cmd
 
 
@@ -304,7 +304,7 @@ def post_launch(old_c: dict[Any, Any], new_digest: str) -> None:
             cmd_delete_image(old_c["configuration"]["image"]["reference"],
                              old_c["configuration"]["image"]["descriptor"]["digest"])
     else:  # Try to recover
-        logger.error("Launch after recreate failed. Trying to recreate the old container")
+        logger.error("Launch after recreate failed. Now trying to recreate the old container")
         if c:
             if not stop_rm(c):
                 logger.error("Recovery failed!")
