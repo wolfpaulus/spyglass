@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "apple-container-spyglass"
+dynamic = ["version"]
+description = "A one-shot macOS CLI for keeping selected Apple Containers up to date."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Wolf Paulus", email = "wolf@paulus.com" },
+]
+classifiers = [
+    "Environment :: Console",
+    "Operating System :: MacOS",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+]
+
+[project.urls]
+Homepage = "https://github.com/wolfpaulus/spyglass"
+Repository = "https://github.com/wolfpaulus/spyglass"
+Issues = "https://github.com/wolfpaulus/spyglass/issues"
+
+[project.scripts]
+spyglass = "spyglass:main"
+
+[tool.setuptools]
+py-modules = ["container_manager", "logging_config", "spyglass"]
+
+[tool.setuptools.dynamic]
+version = { attr = "spyglass.__version__" }

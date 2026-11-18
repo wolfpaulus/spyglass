@@ -18,17 +18,17 @@ from container_manager import (
 )
 
 
-C1 = "run \
+C1 = f"run \
 --name c1 \
 --detach \
 --cpus 1 \
 --memory 1G \
 --publish 8003:8000 \
 --volume c1_logs:/var/log \
---env-file /Users/wolf/VSC/spyglass/tests/c1_env_file \
+--env-file {Path.cwd()}/tests/c1_env_file \
 docker.io/python:alpine"
 
-C2 = "run \
+C2 = f"run \
 --name c2 \
 --detach \
 --cpus 1 \
@@ -37,16 +37,26 @@ C2 = "run \
 --label spyglass_env_file=/Users/wolf/VSC/spyglass/tests/c2_env_file \
 --publish 8004:8000 \
 --volume c2_logs:/var/log \
---env-file /Users/wolf/VSC/spyglass/tests/c2_env_file \
+--env-file {Path.cwd()}/tests/c2_env_file \
 docker.io/library/python:3.15-slim-trixie \
 python3.15 \
 -m http.server \
 8000 \
 --bind 0.0.0.0"
 
+ev1: str | None = None
+ev2: str | None = None
+
 
 def setup():
     """ Create two test containers, one labeled and one not labeled. """
+    global ev1, ev2
+    # Read envirnments:
+    with open(f"{Path.cwd()}/tests/c1_env_file") as f:
+        ev1 = f.read()
+    with open(f"{Path.cwd()}/tests/c2_env_file") as f:
+        ev2 = f.read()
+    # Lauch containers
     container_command(*C1.split())
     container_command(*C2.split())
 
@@ -59,6 +69,14 @@ def teardown():
             container_command("delete", container_name)
         except Exception as e:
             print(f"Error stopping/removing container {container_name}: {e}")
+
+    # Restore old environment files
+    if ev1 is not None:
+        with open(f"{Path.cwd()}/tests/c1_env_file", "w") as f:
+            f.write(ev1)
+    if ev2 is not None:
+        with open(f"{Path.cwd()}/tests/c2_env_file", "w") as f:
+            f.write(ev2)
 
 
 def container_restart():
@@ -137,6 +155,7 @@ def stopping_removing():
 
 
 def recover():
+    """ Lauche a container from the prev image  """
     c = cmd_inspect("c2")
     assert c["status"]["state"] == "running"
     # trigger stop and relauch of c2

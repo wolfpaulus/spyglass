@@ -2,7 +2,7 @@
 __author__ = "Wolf Paulus"
 __copyright__ = "Copyright 2026, wolfpaulus.com"
 __license__ = "MIT License"
-__version__ = "1.0"
+__version__ = "1.0.1"
 __email__ = "wolf@paulus.com"
 
 import subprocess

@@ -4,6 +4,7 @@ __pycache__/
 *.egg-info/
 .venv/
 venv/
+dist/
 
 # Test and coverage output
 .pytest_cache/
@@ -14,3 +15,6 @@ json/
 # Local editor and operating-system files
 .DS_Store
 .vscode/
+
+# local info
+how_to_release.md

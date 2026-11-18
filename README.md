@@ -24,6 +24,7 @@ install the command:
 
 ```shell
 brew tap wolfpaulus/spyglass https://github.com/wolfpaulus/spyglass
+brew trust --formula wolfpaulus/spyglass/spyglass
 brew install spyglass
 spyglass
 ```
@@ -68,22 +69,72 @@ Spyglass writes a rotating log to ~/Library/Logs/Spyglass
 
 ## Run periodically
 
-Use the LaunchAgent template matching your installation:
+For a Homebrew installation, let Homebrew manage the scheduled LaunchAgent:
 
-- [Homebrew installation](./launchd/com.wolfpaulus.spyglass.homebrew.plist)
-- [GitHub checkout](./launchd/com.wolfpaulus.spyglass.github.plist)
+```shell
+brew services start spyglass
+```
 
-Copy one template to `~/Library/LaunchAgents/com.wolfpaulus.spyglass.plist`.
-Replace its example paths with absolute paths from your Mac; launchd does not
-expand `~` or `$HOME`.
+This runs Spyglass when you log in and then once per hour. To stop the scheduled
+job:
 
-- For Homebrew, use `command -v spyglass` for the executable path.
-- For a GitHub checkout, use `command -v python3` and the absolute path to
-  `spyglass.py` in your checkout.
-- For either installation, include the directory containing Apple's `container`
-  command in `PATH`; find it with `command -v container`.
+```shell
+brew services stop spyglass
+```
 
-Run it as the same user who owns the containers; **do not run it as root.**
+The interval is set in the Homebrew formula. To change it locally, run
+`brew edit spyglass` and change `interval 3600` in the `service` block; the
+value is in seconds (for example, `900` runs every 15 minutes). Apply the
+change by restarting the service:
+
+```shell
+brew services restart spyglass
+```
+
+This local formula edit may be overwritten when you update the tap. To keep a
+custom interval across updates, maintain your own tap or use a manually
+configured LaunchAgent.
+
+Run it as the same user who owns the containers; **do not use `sudo`**. The
+service uses Homebrew's standard `PATH`. If Apple's `container` command is
+installed somewhere else, add its directory to `PATH` in
+`~/.homebrew/services/spyglass.env`, then restart the service.
+
+For a GitHub checkout, save the following as
+`~/Library/LaunchAgents/com.wolfpaulus.spyglass.plist`. Replace the example
+Python and script paths with absolute paths on your Mac; launchd does not
+expand `~` or `$HOME`. Include the directory containing Apple's `container`
+command in `PATH`.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+ "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.wolfpaulus.spyglass</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/opt/homebrew/bin/python3</string>
+        <string>/Users/yourname/path/to/spyglass/spyglass.py</string>
+    </array>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StartInterval</key>
+    <integer>3600</integer>
+</dict>
+</plist>
+```
 
 Create the LaunchAgents directory if needed, then load the job:
 

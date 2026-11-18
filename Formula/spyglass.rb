@@ -13,6 +13,14 @@ class Spyglass < Formula
     virtualenv_install_with_resources
   end
 
+  service do
+    run [opt_bin/"spyglass"]
+    run_at_load true
+    run_type :interval
+    interval 3600
+    environment_variables PATH: std_service_path_env
+  end
+
   test do
     fake_container = testpath/"container"
     fake_container.write <<~EOS
