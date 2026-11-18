@@ -68,62 +68,22 @@ Spyglass writes a rotating log to ~/Library/Logs/Spyglass
 
 ## Run periodically
 
-To run Spyglass periodically, create a LaunchAgent (example below). For a
-Homebrew or PyPI installation, use the absolute path returned by
-`command -v spyglass`. For a GitHub checkout, use the absolute paths to Python
-and `spyglass.py`. launchd does not expand `~` or `$HOME`.
+Use the LaunchAgent template matching your installation:
 
-LaunchAgents have a limited `PATH`. Include the directory containing Apple's
-`container` executable; find it with `command -v container`. Adjust the
-example's `PATH` if your installation uses a different location.
+- [Homebrew installation](./launchd/com.wolfpaulus.spyglass.homebrew.plist)
+- [GitHub checkout](./launchd/com.wolfpaulus.spyglass.github.plist)
+
+Copy one template to `~/Library/LaunchAgents/com.wolfpaulus.spyglass.plist`.
+Replace its example paths with absolute paths from your Mac; launchd does not
+expand `~` or `$HOME`.
+
+- For Homebrew, use `command -v spyglass` for the executable path.
+- For a GitHub checkout, use `command -v python3` and the absolute path to
+  `spyglass.py` in your checkout.
+- For either installation, include the directory containing Apple's `container`
+  command in `PATH`; find it with `command -v container`.
 
 Run it as the same user who owns the containers; **do not run it as root.**
-
-## Launch Agent
-
-Save as `~/Library/LaunchAgents/com.wolfpaulus.spyglass.plist`. Replace the
-example executable path with the absolute path returned by `command -v
-spyglass`.
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
- "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.wolfpaulus.spyglass</string>
-
-    <key>ProgramArguments</key>
-    <array>
-        <string>/opt/homebrew/bin/spyglass</string>
-    </array>
-
-    <key>EnvironmentVariables</key>
-    <dict>
-        <key>PATH</key>
-        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
-    </dict>
-
-    <key>RunAtLoad</key>
-    <true/>
-
-    <key>StartInterval</key>
-    <integer>3600</integer>
-</dict>
-</plist>
-```
-
-For a GitHub checkout, replace the `ProgramArguments` array with the absolute
-paths to your Python interpreter and `spyglass.py` script. Find the paths with
-`command -v python3` and `pwd` from the checkout:
-
-```xml
-<array>
-    <string>/opt/homebrew/bin/python3</string>
-    <string>/Users/yourname/path/to/spyglass/spyglass.py</string>
-</array>
-```
 
 Create the LaunchAgents directory if needed, then load the job:
 
