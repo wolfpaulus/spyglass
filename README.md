@@ -6,7 +6,7 @@
 [![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-3776AB?logo=python&logoColor=white)](#requirements)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python runtime dependencies: none](https://img.shields.io/badge/Python%20runtime%20dependencies-none-success.svg)](#requirements)
-[![Coverage](coverage.svg)](#coverage)
+[![Coverage](https://raw.githubusercontent.com/wolfpaulus/spyglass/main/coverage.svg)](#coverage)
 
 Spyglass is a **one-shot** command-line tool that keeps selected Apple Containers running and updates them to the latest version of their image. It is not a daemon; schedule it with a macOS LaunchAgent (see below) if you want it to run periodically or at login.
 
@@ -19,8 +19,7 @@ Spyglass is a **one-shot** command-line tool that keeps selected Apple Container
 
 ## Install with Homebrew
 
-This project is distributed from a custom Homebrew tap. Add the tap once, then
-install the command:
+This project is distributed from a custom **Homebrew tap.** Add the tap once, then install the command. And yes, brew update/upgrade will work for this tap too.
 
 ```shell
 brew tap wolfpaulus/spyglass https://github.com/wolfpaulus/spyglass
@@ -29,14 +28,24 @@ brew install spyglass
 spyglass
 ```
 
-Alternatively, install from PyPI with Python 3.12 or newer:
+You should get something like this:
+
+```text
+To start wolfpaulus/spyglass/spyglass now and restart at login:
+  brew services start wolfpaulus/spyglass/spyglass
+
+Or, if you don't want/need a background service you can just run:
+  /opt/homebrew/opt/spyglass/bin/spyglass
+```
+
+**Alternatively,** install from PyPI with Python 3.12 or newer:
 
 ```shell
 python3 -m pip install apple-container-spyglass
 spyglass
 ```
 
-Or clone the GitHub repository and run Spyglass directly:
+**Or clone the GitHub repository** and run Spyglass directly:
 
 ```shell
 git clone https://github.com/wolfpaulus/spyglass.git
