@@ -10,6 +10,11 @@
 
 Spyglass is a **one-shot** command-line tool that keeps selected Apple Containers running and updates them to the latest version of their image. It is not a daemon; schedule it with a macOS LaunchAgent (see below) if you want it to run periodically or at login.
 
+## Related blog posts
+
+- [Apple Container](https://wolfpaulus.com/apple-container/) - Installing Apple Container on macOS and keeping it running.
+- [Spyglass - Keeping an Eye on Apple Containers](https://wolfpaulus.com/spyglass/) - The motivation and design behind Spyglass.
+
 ## Requirements
 
 - macOS with Apple's container command-line tool installed and its container service configured
