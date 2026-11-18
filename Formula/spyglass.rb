@@ -3,8 +3,8 @@ class Spyglass < Formula
 
   desc "Keep selected Apple Containers up to date"
   homepage "https://github.com/wolfpaulus/spyglass"
-  url "https://files.pythonhosted.org/packages/ed/56/bab4b729d393babe11ab513ff2dd0f222621df0bbc99c89172b1acf097ce/apple_container_spyglass-1.0.tar.gz"
-  sha256 "994dec31724181cff1f4bf3c4068f11ccd4b3e71c0752ec6f2ef7da5c02f7d0b"
+  url "https://files.pythonhosted.org/packages/00/87/b60911e53090b8e0190d6f11c93ffd54bd6eee5d0fd71262ee0a21b46e17/apple_container_spyglass-1.0.1.tar.gz"
+  sha256 "af303f4cb798cc19c32ae03569cf4f3b301e648f2be995e8adb4b8558930a494"
   license "MIT"
 
   depends_on "python@3.15"
