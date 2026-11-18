@@ -13,8 +13,18 @@ Spyglass is a **one-shot** command-line tool that keeps selected Apple Container
 ## Requirements
 
 - macOS with Apple's container command-line tool installed and its container service configured
-- Python 3.12 or newer
+- Python 3.12 or newer for source or PyPI installs; Homebrew installs Python
+  for you
 - Apple's container executable available on PATH when Spyglass runs
+
+## Install with Homebrew
+
+Tap the project and install the `spyglass` command:
+
+```shell
+brew tap wolfpaulus/spyglass https://github.com/wolfpaulus/spyglass
+brew install wolfpaulus/spyglass/spyglass
+```
 
 ## Run once
 
