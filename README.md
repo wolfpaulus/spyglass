@@ -19,22 +19,46 @@ Spyglass is a **one-shot** command-line tool that keeps selected Apple Container
 
 ## Install with Homebrew
 
-Tap the project and install the `spyglass` command:
+This project is distributed from a custom Homebrew tap. Add the tap once, then
+install the command:
 
 ```shell
 brew tap wolfpaulus/spyglass https://github.com/wolfpaulus/spyglass
-brew install wolfpaulus/spyglass/spyglass
+brew install spyglass
+spyglass
 ```
 
-## Run once
-
-Clone this repository, change into the checkout, and run:
+Alternatively, install from PyPI with Python 3.12 or newer:
 
 ```shell
+python3 -m pip install apple-container-spyglass
+spyglass
+```
+
+Or clone the GitHub repository and run Spyglass directly:
+
+```shell
+git clone https://github.com/wolfpaulus/spyglass.git
+cd spyglass
 python3 spyglass.py
 ```
 
-Spyglass only manages containers explicitly labeled **spyglass=true**. For each eligible container it pulls the configured image, compares image digests, and recreates the container when a newer image is available. Stopped, eligible containers are started (for instance after rebooting). After a successful update, the old image is removed by default; set **spyglass_rmi=false** to keep it.
+## Choose containers to manage
+
+Spyglass only manages containers labeled `spyglass=true`. Add that label when
+creating a container:
+
+```shell
+container run --detach --name my-app \
+  --label spyglass=true \
+  docker.io/library/nginx:latest
+```
+
+To manage an existing container, recreate it with the label. For each labeled
+container Spyglass pulls its configured image, compares image digests, and
+recreates it if the image changed. Updates briefly interrupt the container.
+Stopped labeled containers are started. After an update, the old image is
+removed by default; add the label `spyglass_rmi=false` to keep it.
 
 Container configuration is reconstructed from Apple Container's inspect data. The effective environment is saved under ~/Library/Application Support/Spyglass/env. To override environment values, set **spyglass_env_file** to the path of a standard KEY=value file; its values take precedence over the captured environment. These files may contain secrets, so keep them private and do not commit them.
 
@@ -44,11 +68,10 @@ Spyglass writes a rotating log to ~/Library/Logs/Spyglass
 
 ## Run periodically
 
-To run Spyglass periodically, create a LaunchAgent (example below) that invokes the Python
-interpreter and script from your cloned checkout. The paths in
-`ProgramArguments` must be absolute; launchd does not expand `~` or `$HOME`.
-Use `command -v python3` to find your interpreter and `pwd` from the checkout
-to find the repository path.
+To run Spyglass periodically, create a LaunchAgent (example below). For a
+Homebrew or PyPI installation, use the absolute path returned by
+`command -v spyglass`. For a GitHub checkout, use the absolute paths to Python
+and `spyglass.py`. launchd does not expand `~` or `$HOME`.
 
 LaunchAgents have a limited `PATH`. Include the directory containing Apple's
 `container` executable; find it with `command -v container`. Adjust the
@@ -59,7 +82,8 @@ Run it as the same user who owns the containers; **do not run it as root.**
 ## Launch Agent
 
 Save as `~/Library/LaunchAgents/com.wolfpaulus.spyglass.plist`. Replace the
-example interpreter and checkout paths with the absolute paths on your Mac.
+example executable path with the absolute path returned by `command -v
+spyglass`.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -72,8 +96,7 @@ example interpreter and checkout paths with the absolute paths on your Mac.
 
     <key>ProgramArguments</key>
     <array>
-        <string>/opt/homebrew/bin/python3</string>
-        <string>/Users/yourname/path/to/spyglass/spyglass.py</string>
+        <string>/opt/homebrew/bin/spyglass</string>
     </array>
 
     <key>EnvironmentVariables</key>
@@ -89,6 +112,17 @@ example interpreter and checkout paths with the absolute paths on your Mac.
     <integer>3600</integer>
 </dict>
 </plist>
+```
+
+For a GitHub checkout, replace the `ProgramArguments` array with the absolute
+paths to your Python interpreter and `spyglass.py` script. Find the paths with
+`command -v python3` and `pwd` from the checkout:
+
+```xml
+<array>
+    <string>/opt/homebrew/bin/python3</string>
+    <string>/Users/yourname/path/to/spyglass/spyglass.py</string>
+</array>
 ```
 
 Create the LaunchAgents directory if needed, then load the job:
